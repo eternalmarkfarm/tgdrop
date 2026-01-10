@@ -3,222 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mini App Shop</title>
+    <title>Настройки профиля</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Основные настройки и переменные цветов Telegram */
+        :root {
+            /* Цвета брендов */
+            --twitch-color: #9146FF;
+            --steam-color: #171a21; /* или #2a475e для синего оттенка */
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #fff); /* Фон как в Telegram */
-            color: var(--tg-theme-text-color, #000); /* Текст как в Telegram */
+            background-color: var(--tg-theme-secondary-bg-color, #efeff3);
+            color: var(--tg-theme-text-color, #000);
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            padding: 16px;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Шапка профиля */
-        .header {
-            padding: 20px;
-            text-align: center;
-            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        h1 {
+            font-size: 24px;
+            margin: 0 0 20px 0;
+            padding-left: 4px;
         }
 
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: var(--tg-theme-button-color, #3390ec);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #fff;
-            margin: 0 auto 10px;
-            object-fit: cover;
-        }
-
-        .username {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .status {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #999);
-            margin-top: 5px;
-        }
-
-        /* Сетка товаров/услуг */
-        .container {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 колонки */
-            gap: 15px;
-            padding-bottom: 80px; /* Отступ под MainButton */
-        }
-
+        /* Стиль карточки */
         .card {
             background-color: var(--tg-theme-bg-color, #fff);
-            border: 1px solid var(--tg-theme-secondary-bg-color, #efefef);
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             transition: transform 0.1s;
-            /* Тень для красоты */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
-        .card:active {
-            transform: scale(0.98);
-        }
-
-        .card-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .card-price {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #888);
+        .card-header {
+            display: flex;
+            align-items: center;
             margin-bottom: 12px;
         }
 
-        .add-btn {
-            background-color: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #fff);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 20px;
+            color: white;
         }
 
-        /* Анимация появления */
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            flex-grow: 1;
         }
-        
+
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            color: var(--tg-theme-hint-color, #999);
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #888);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* Специфичные стили для инструкций */
+        .instruction-step {
+            font-size: 13px;
+            background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: var(--tg-theme-text-color);
+            border-left: 3px solid var(--tg-theme-link-color, #2481cc);
+        }
+
+        /* Поля ввода и кнопки */
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            border: 1px solid var(--tg-theme-hint-color, #ccc);
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 16px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--tg-theme-button-color, #3390ec);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        /* Цвета кнопок */
+        .btn-twitch {
+            background-color: var(--twitch-color);
+        }
+
+        .btn-steam {
+            background-color: var(--tg-theme-button-color, #3390ec);
+        }
+
+        /* Анимация */
         .fade-in {
-            animation: fade-in 0.5s ease-out forwards;
+            animation: fadeIn 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
         }
 
     </style>
 </head>
 <body>
 
-    <!-- Шапка с данными пользователя -->
-    <header class="header">
-        <div id="user-avatar" class="avatar">👤</div>
-        <h1 id="user-name" class="username">Гость</h1>
-        <p class="status">Добро пожаловать в Mini App</p>
-    </header>
+    <h1>Подключение сервисов</h1>
 
-    <!-- Контент -->
-    <main class="container">
-        <!-- Карточка товара 1 -->
-        <div class="card fade-in" style="animation-delay: 0.1s;">
-            <div class="card-icon">🚀</div>
-            <div class="card-title">Premium</div>
-            <div class="card-price">500 Stars</div>
-            <button class="add-btn" onclick="addItem(500)">Добавить</button>
+    <!-- Карточка Twitch -->
+    <div class="card fade-in" style="animation-delay: 0.1s;">
+        <div class="card-header">
+            <div class="icon-box" style="background-color: var(--twitch-color);">
+                <!-- SVG Icon Twitch -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+            </div>
+            <div class="card-title">Twitch аккаунт</div>
+            <span class="status-badge" id="twitch-status">Не привязан</span>
+        </div>
+        <div class="card-desc">
+            Привяжите ваш Twitch аккаунт для автоматического участия в розыгрышах и получения наград.
+        </div>
+        <button class="btn btn-twitch" onclick="linkTwitch()">
+            ПРИВЯЗАТЬ TWITCH
+        </button>
+    </div>
+
+    <!-- Карточка Steam -->
+    <div class="card fade-in" style="animation-delay: 0.2s;">
+        <div class="card-header">
+            <div class="icon-box" style="background-color: #171a21;">
+                <!-- SVG Icon Steam -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.979 0C5.375 0 0 5.362 0 11.979c0 3.165 1.228 6.061 3.235 8.243l4.088-5.91a4.27 4.27 0 0 1-.36-1.742 4.28 4.28 0 0 1 8.242-1.57l3.684-2.678A11.928 11.928 0 0 0 11.979 0Zm6.64 8.79a2.164 2.164 0 1 0-.002 4.329 2.164 2.164 0 0 0 .002-4.33ZM9.85 10.842a2.164 2.164 0 1 0 0 4.329 2.164 2.164 0 0 0 0-4.33Z"/></svg>
+            </div>
+            <div class="card-title">Ссылка на обмен</div>
+        </div>
+        
+        <div class="card-desc">
+            Необходима для отправки выигрыша.
         </div>
 
-        <!-- Карточка товара 2 -->
-        <div class="card fade-in" style="animation-delay: 0.2s;">
-            <div class="card-icon">⚡</div>
-            <div class="card-title">Boost</div>
-            <div class="card-price">150 Stars</div>
-            <button class="add-btn" onclick="addItem(150)">Добавить</button>
+        <div class="instruction-step">
+            Откройте <b>Steam</b> → Инвентарь → Предложения обмена → "Кто может присылать мне предложения?"
         </div>
 
-        <!-- Карточка товара 3 -->
-        <div class="card fade-in" style="animation-delay: 0.3s;">
-            <div class="card-icon">🎨</div>
-            <div class="card-title">Design</div>
-            <div class="card-price">300 Stars</div>
-            <button class="add-btn" onclick="addItem(300)">Добавить</button>
-        </div>
+        <input type="text" id="steam-link" placeholder="Вставьте ссылку сюда...">
 
-        <!-- Карточка товара 4 -->
-        <div class="card fade-in" style="animation-delay: 0.4s;">
-            <div class="card-icon">💎</div>
-            <div class="card-title">VIP</div>
-            <div class="card-price">1000 Stars</div>
-            <button class="add-btn" onclick="addItem(1000)">Добавить</button>
-        </div>
-    </main>
+        <button class="btn btn-steam" onclick="saveSteam()">
+            ДОБАВИТЬ ССЫЛКУ
+        </button>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        
-        // 1. Сообщаем телеграму, что приложение готово
-        tg.ready();
-        
-        // 2. Раскрываем приложение на всю высоту
-        tg.expand();
+        tg.expand(); // Растянуть на весь экран
 
-        // 3. Настройка главной кнопки (MainButton)
-        const mainButton = tg.MainButton;
-        mainButton.text = "ОПЛАТИТЬ";
-        mainButton.textColor = "#FFFFFF";
-        mainButton.color = "#2cab37"; // Зеленый цвет кнопки
-
-        // Получаем данные пользователя
-        const user = tg.initDataUnsafe.user;
-        
-        if (user) {
-            // Подставляем имя
-            document.getElementById('user-name').innerText = `${user.first_name} ${user.last_name || ''}`;
+        // Логика кнопки Twitch
+        function linkTwitch() {
+            tg.HapticFeedback.impactOccurred('medium');
             
-            // Если есть фото (avatar), можно попытаться подставить (но это сложнее из-за защиты ссылок),
-            // поэтому пока просто оставим инициалы или заглушку.
-            if (user.username) {
-                document.querySelector('.status').innerText = `@${user.username}`;
-            }
-        }
-
-        // Логика корзины
-        let total = 0;
-
-        function addItem(price) {
-            total += price;
+            // Здесь должна быть ваша ссылка на авторизацию (OAuth)
+            // tg.openLink('https://id.twitch.tv/oauth2/authorize?...');
             
-            // Вибрация при нажатии (Haptic Feedback) - очень важно для ощущения нативности
-            tg.HapticFeedback.impactOccurred('light');
-
-            if (total > 0) {
-                mainButton.text = `ОПЛАТИТЬ: ${total} Stars`;
-                mainButton.show(); // Показываем главную кнопку
-            } else {
-                mainButton.hide();
-            }
-        }
-
-        // Обработка клика по главной кнопке
-        Telegram.WebApp.onEvent('mainButtonClicked', function(){
-            tg.sendData(JSON.stringify({total: total})); // Отправляем данные боту
-            // Или просто показываем алерт для демонстрации
+            // Для демо просто покажем алерт
             tg.showPopup({
-                title: 'Заказ оформлен',
-                message: `Вы выбрали товаров на сумму ${total} Stars!`,
+                title: 'Переход на Twitch',
+                message: 'Сейчас откроется окно авторизации Twitch.',
                 buttons: [{type: 'ok'}]
             });
-        });
+        }
 
+        // Логика кнопки Steam
+        function saveSteam() {
+            const link = document.getElementById('steam-link').value;
+            
+            if (link.length < 10 || !link.includes('steamcommunity.com')) {
+                tg.HapticFeedback.notificationOccurred('error');
+                tg.showAlert('Пожалуйста, введите корректную ссылку на обмен Steam (Trade URL).');
+                return;
+            }
+
+            // Успех
+            tg.HapticFeedback.notificationOccurred('success');
+            
+            // Отправляем данные боту
+            tg.sendData(JSON.stringify({
+                action: 'save_steam',
+                url: link
+            }));
+            
+            // Визуальное подтверждение
+            const btn = document.querySelector('.btn-steam');
+            btn.innerHTML = '✅ СОХРАНЕНО';
+            btn.style.backgroundColor = '#4caf50';
+            setTimeout(() => {
+                btn.innerHTML = 'ДОБАВИТЬ ССЫЛКУ';
+                btn.style.backgroundColor = ''; // Сброс
+            }, 2000);
+        }
     </script>
 </body>
 </html>
